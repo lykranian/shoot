@@ -133,9 +133,10 @@ if [ $EXT == "png" ]; then
 fi
 
 if [ $DESTINATION == "teknik" ]; then
-    OUTPUT=$(curl -sf -F "genDeletionKey=true" -F "saveKey=true" -F "encrypt=true" -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
+    #    OUTPUT=$(curl -sf -F "genDeletionKey=true" -F "saveKey=true" -F "encrypt=true" -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
+    OUTPUT=$(curl -sf -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
     LINK=$(echo $OUTPUT | jq -M -r .result.url)
-    DELETION=$(echo $OUTPUT | jq -M -r .result.url)
+#    DELETION=$(echo $OUTPUT | jq -M -r .result.url) # not correct yet
 elif [ $DESTINATION == "kbfs" ]; then
     if ! installed keybase; then
 	echo "  please install keybase."
