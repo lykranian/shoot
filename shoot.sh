@@ -10,7 +10,7 @@
 #           keybase (optional)
 
 # user options
-DESTINATION="kbfs" # "teknik" or "kbfs" for now
+DESTINATION="teknik" # "teknik" or "kbfs" for now
 EXT="png" # filetype (keep png)
 # end options
 
@@ -77,7 +77,7 @@ copy_file () {
     filename=$(basename "$1")
     EXT="${filename##*.}"
     FILE="$NAME.$EXT"
-    cp $1 $TMP/$FILE
+    cp "$1" $TMP/$FILE
 }
 
 
@@ -104,14 +104,14 @@ if [ $# -eq 0 ]; then
     full_screen
 fi
 
-if [ $# -eq 1 ]; then
-    if [ $1 == "-s" ]; then
+if [ "$#" -eq 1 ]; then
+    if [ "$1" == "-s" ]; then
 	select_area
-    elif [ $1 == "-h" ]; then
+    elif [ "$1" == "-h" ]; then
 	 show_help
     else
-	if [ -e $1 ]; then
-	    copy_file $1
+	if [ -e "$1" ]; then
+	    copy_file "$1"
 	else
 	    echo "  file does not exist."
 	    exit
@@ -156,9 +156,13 @@ elif [ $DESTINATION == "kbfs" ]; then
 
 	LINK="https://$USER.keybase.pub/i/$FILE"
     fi
+else
+    echo "  please choose a valid destination"
+    exit
 fi
-printf "  "
+
 # copies link to clipboards
+printf "  "
 echo -n $LINK | xclip -i -sel p -f | xclip -i -sel c -f
 printf "\n"
 if [[ $DELETION ]]; then
