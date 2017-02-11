@@ -10,7 +10,7 @@
 #           keybase (optional)
 
 # user options
-DESTINATION="teknik" # "teknik" or "kbfs" for now
+DESTINATION="kbfs" # "teknik" or "kbfs" for now
 EXT="png" # filetype (keep png)
 # end options
 
@@ -160,8 +160,9 @@ fi
 printf "  "
 # copies link to clipboards
 echo -n $LINK | xclip -i -sel p -f | xclip -i -sel c -f
+printf "\n"
 if [[ $DELETION ]]; then
-    printf "\n  "
+    printf "  "
     echo $DELETION
     echo $DELETION > $TMP/$(basename $LINK).deletionKey
 fi
