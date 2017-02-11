@@ -15,7 +15,6 @@ EXT="png" # filetype (keep png)
 # end options
 
 
-
 # don't blame me if you touch anything below and it stops working
 NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 5 | head -n 1)
 FILE="$NAME.$EXT"
@@ -27,8 +26,6 @@ mkdir $TMP &> /dev/null
 show_help () {
     echo "  simple screenshot script"
     echo "  https image link is copied to clipboard"
-    echo ""
-    echo "  set $DESTINATION on line 13"
     echo ""
     echo "  usage : shoot"
     echo "        : shoot -s"
@@ -129,14 +126,14 @@ exiftool -all= $TMP/$FILE &> /dev/null
 # pngcrush if file is a png
 if [ $EXT == "png" ]; then
     pngcrush $TMP/$FILE $TMP/$FILE.crushed &> /dev/null
-    cp $TMP/$FILE.crushed $TMP/$FILE
+    mv $TMP/$FILE.crushed $TMP/$FILE
 fi
 
 if [ $DESTINATION == "teknik" ]; then
-    #    OUTPUT=$(curl -sf -F "genDeletionKey=true" -F "saveKey=true" -F "encrypt=true" -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
-    OUTPUT=$(curl -sf -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
+    OUTPUT=$(curl -sf -F "genDeletionKey=true" -F "saveKey=true" -F "encrypt=true" -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
+    #OUTPUT=$(curl -sf -F "file=@$(echo $TMP/$FILE)" https://api.teknik.io/v1/upload/)
     LINK=$(echo $OUTPUT | jq -M -r .result.url)
-#    DELETION=$(echo $OUTPUT | jq -M -r .result.url) # not correct yet
+    DELETION=$LINK/$(echo $OUTPUT | jq -M -r .result.deletionKey) # not correct yet
 elif [ $DESTINATION == "kbfs" ]; then
     if ! installed keybase; then
 	echo "  please install keybase."
@@ -160,10 +157,12 @@ elif [ $DESTINATION == "kbfs" ]; then
 	LINK="https://$USER.keybase.pub/i/$FILE"
     fi
 fi
-
-
 printf "  "
 # copies link to clipboards
 echo -n $LINK | xclip -i -sel p -f | xclip -i -sel c -f
-echo ""
+if [[ $DELETION ]]; then
+    printf "\n  "
+    echo $DELETION
+    echo $DELETION > $TMP/$(basename $LINK).deletionKey
+fi
 notify-send "upload complete"

@@ -11,8 +11,6 @@ on several different services (more to come)
 simple screenshot script
 https image link is copied to clipboard
 
-set $DESTINATION on line 13
-
   usage : shoot
         : shoot -s
         : shoot filename
@@ -29,3 +27,5 @@ set $DESTINATION on line 13
         : jq
         : keybase (optional)
 ```
+
+deletion url for teknik uploads is saved to the $TMP directory, for example `/tmp/shoot/df2Gz.png.deletionKey`
