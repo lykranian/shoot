@@ -29,3 +29,5 @@ https image link is copied to clipboard
 ```
 
 deletion url for teknik uploads is saved to the $TMP directory, for example `/tmp/shoot/df2Gz.png.deletionKey`
+
+`./shoot <filename>` can be used to upload any type of file, not just image files
